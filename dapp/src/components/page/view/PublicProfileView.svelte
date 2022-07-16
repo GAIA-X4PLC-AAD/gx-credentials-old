@@ -50,19 +50,6 @@
       {basicDraft.alias || ''}
     </div>
   {/if}
-  <div class="flex flex-row items-center">
-    <div class="flex flex-row items-center cursor-pointer bubble-outline mr-0">
-      <div class="address-container mr-2">
-        {$params.address.slice(0,5)}...{$params.address.slice(-4)}
-      </div>
-      <CopyButton text={$params.address} color="gray" class="w-4 h-4" />
-    </div>
-  </div>
-  <div class="flex flex-row items-center mt-3">
-    {#each Object.values(otherClaims) as claim}
-      <ClaimIcon {claim} tooltip={publicProfileViewTooltip(claim)} />
-    {/each}
-  </div>
 
   {#if basicClaim}
     <!-- Specially treat basicClaim -->
@@ -76,6 +63,15 @@
       <hr />
     </div>
   {/if}
+  <h3 style="margin-top:20px;margin-bottom:10px">Other Credentials</h3>
+  <div class="flex flex-row items-center mt-3">
+    {#each Object.values(otherClaims) as claim}
+      <ClaimIcon {claim} tooltip={publicProfileViewTooltip(claim)} />
+    {/each}
+  </div>
+  <div class="mt-10 mb-4">
+    <hr />
+  </div>
   <div
     class="cursor-pointer font-semibold my-4"
     on:click={() =>
