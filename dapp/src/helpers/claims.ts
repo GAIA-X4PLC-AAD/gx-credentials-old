@@ -25,7 +25,8 @@ export type ClaimType = 'basic'
   | 'ethereum'
   | 'discord'
   | 'dns'
-  | 'github';
+  | 'github'
+  | 'email';
 
 // NOTE: Ethereum backwards compatibility
 export type ClaimVCType =
@@ -35,7 +36,8 @@ export type ClaimVCType =
   | 'EthereumAddressControl'
   | 'DiscordVerification'
   | 'DnsVerification'
-  | 'GitHubVerification';
+  | 'GitHubVerification'
+  | 'EmailVerification';
 
 // TODO: Type better? Define what VCs look like generically?
 export const claimTypeFromVC = (vc: any): ClaimType | false => {
@@ -61,6 +63,8 @@ export const claimTypeFromVC = (vc: any): ClaimType | false => {
         return 'dns';
       case 'GitHubVerification':
         return 'github';
+      case 'EmailVerification':
+        return 'email';
       default:
     }
   }
@@ -77,6 +81,7 @@ const claimTypes: Array<ClaimType> = [
   'discord',
   'dns',
   'github',
+  'email'
 ];
 
 export interface BasicDraft {
@@ -109,13 +114,18 @@ export interface GitHubDraft {
   gistId: string;
 }
 
+export interface EmailDraft {
+  email: string
+}
+
 export type ClaimDraft =
   | BasicDraft
   | TwitterDraft
   | EthereumDraft
   | DiscordDraft
   | DnsDraft
-  | GitHubDraft;
+  | GitHubDraft
+  | EmailDraft;
 
 /*
  * UI Text & Assets
@@ -212,6 +222,18 @@ export const newDisplay = (ct: ClaimType): ClaimUIAssets => {
         title: 'GitHub Verification',
         type: 'Social Media'
       }
+    case 'email':
+      return {
+        description:
+          'This process is used to link your email address to your Tezos account.',
+        display: 'Email Verification',
+        icon: PersonOutlined,
+        route: '/email',
+        routeDescription: 'Email Verification',
+        proof: 'Challenge',
+        title: 'Email Verification',
+        type: 'Email Ownership',
+      };
   }
 
   exhaustiveCheck(ct);
@@ -240,18 +262,20 @@ export const newDraft = (ct: ClaimType): ClaimDraft => {
         address: '',
         sameAs: '',
       };
-
     case 'twitter':
       return {
         handle: '',
         tweetUrl: '',
       };
-
     case 'github':
       return {
         handle: '',
         gistId: ''
-      }
+      };
+    case 'email':
+      return {
+        email: '',
+    }
   }
 
   exhaustiveCheck(ct);
@@ -374,13 +398,21 @@ export const contentToDraft = (ct: ClaimType, content: any): ClaimDraft => {
         gistId,
       }
     }
+    case 'email': {
+      const { credentialSubject } = content;
+      const {sameAs} = credentialSubject;
+
+      return {
+        email: sameAs.split("/")[sameAs.split("/").length - 1],
+      };
+    }
   }
 
   exhaustiveCheck(ct);
 };
 
 export const formatWebsite = (url: string): string => {
-  if (url.match(/^(https:\/\/|http:\/\/|www\.).*$/g)) {
+  if (url?.match(/^(https:\/\/|http:\/\/|www\.).*$/g)) {
     return url;
   }
   return 'http://' + url;
@@ -489,10 +521,10 @@ export const getFullAttestation = async (
       return `${getUnsignedAttestation(subject)}=${await getSignedAttestation(subject, userData, wallet)}`;
     case "discord":
     case "github":
+    case "email":
     case "twitter":
       return `${getUnsignedAttestation(subject)}${await getSignedAttestation(subject, userData, wallet)}`;
   }
-
   exhaustiveCheck(subject.type);
 };
 

@@ -72,22 +72,39 @@
   export let claim: Claim;
   export let tooltip: Boolean | String = false;
 
-  const enableCopy = ['discord', 'dns'];
+  const enableCopy = ['discord', 'dns', 'email'];
+  let claimText = '';
+  switch (claim.type) {
+    case 'discord':
+      claimText = claim.draft.handle;
+      break;
+    case 'dns':
+      claimText = claim.draft.address;
+      break;
+    case 'email':
+      claimText = claim.draft.email;
+      break;
+  }
 </script>
 
-<a
-  href={claimToOutlink(claim.type, claim)}
-  target="_blank"
-  data-tooltip={tooltip}
->
-  <CopyButton
-    text={selectIconCopyText(claim)}
-    displayIcon={false}
-    disabled={!enableCopy.includes(claim.type)}
-    class="mr-2"
+<div style="display:flex">
+  <a
+    href={claimToOutlink(claim.type, claim)}
+    target="_blank"
+    data-tooltip={tooltip}
   >
-    <div class="social-icon-container cursor-pointer">
-      <svelte:component this={claim.display.icon} />
-    </div>
-  </CopyButton>
-</a>
+    <CopyButton
+      text={selectIconCopyText(claim)}
+      displayIcon={false}
+      disabled={!enableCopy.includes(claim.type)}
+      class="mr-2"
+    >
+      <div class="social-icon-container cursor-pointer">
+        <svelte:component this={claim.display.icon} />
+      </div>
+    </CopyButton>
+  </a>
+  <div>
+    {claimText}
+  </div>
+</div>
