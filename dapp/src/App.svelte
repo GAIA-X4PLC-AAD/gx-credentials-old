@@ -66,7 +66,7 @@
 </style>
 
 <script lang="ts">
-import { Router, Route } from 'svelte-navigator';
+  import { Router, Route } from 'svelte-navigator';
   import {
     Address,
     Connect,
@@ -96,6 +96,8 @@ import { Router, Route } from 'svelte-navigator';
     TwitterVerificationPublicTweet,
     DiscordVerification,
     DnsVerification,
+    Email,
+    EmailVerification,
   } from './routes';
 
   //This avoids PurgeCSS from deleting classes from production build
@@ -206,5 +208,11 @@ import { Router, Route } from 'svelte-navigator';
   </Route>
   <Route path="ethereumWallet">
     <Wallet />
+  </Route>
+  <Route path="email">
+    <Email />
+  </Route>
+  <Route path="EmailVerification">
+    <EmailVerification />
   </Route>
 </Router>

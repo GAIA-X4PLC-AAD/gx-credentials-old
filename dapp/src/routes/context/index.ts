@@ -12,3 +12,4 @@ export { default as Address } from './EthereumAddressControl/address.svelte';
 export { default as Wallet } from './EthereumControl/wallet.svelte';
 export {default as GistId } from './GithubVerificationMessage/gistId.svelte'
 export {default as GistVersion } from './GithubVerificationMessage/gistVersion.svelte'
+export { default as EmailVerification } from './EmailVerification.svelte';
