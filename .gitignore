@@ -4,3 +4,4 @@ wrangler.toml
 node_modules/
 target
 wrangler.toml
+email-server/.env
