@@ -1,5 +1,5 @@
 enum ProfileDisplay {
-  BASIC = 'Basic Profile Information',
+  BASIC = 'Company Information',
   TWITTER = 'Twitter Account Verification',
 }
 

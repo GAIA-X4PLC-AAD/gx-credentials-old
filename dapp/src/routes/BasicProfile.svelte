@@ -21,7 +21,6 @@
   let navigate = useNavigate();
 
   const verification: ClaimMap = $claimsStream;
-
   $: display = verification?.basic.display;
 
   let alias = '';
@@ -46,50 +45,40 @@
     <VerificationStep
       step={1}
       bind:currentStep
-      title="Fill in Basic Information"
-      description="Self-attest to your brand’s information and link it to other identifiers that have been provided."
+      title="Fill in Company Information"
+      description="Issue a company self description that will be validated by asc(s. Upon succesuful validation, a verifiable credential will be issued."
     >
-      <Label fieldName="alias" value="Alias" class="mt-6" />
+      <Label fieldName="name" value="Name" class="mt-6" />
       <Input
         bind:value={alias}
         name="alias"
-        placeholder="Enter an alias"
+        placeholder="Enter company name"
         disabled={currentStep !== 1}
       />
 
-      <Label fieldName="description" value="Description" class="mt-2" />
+      <Label fieldName="description" value="GX-ID" class="mt-2" />
       <Input
         bind:value={description}
         name="description"
-        placeholder="Enter a description"
+        placeholder="Enter GX-ID"
         disabled={currentStep !== 1}
       />
 
-      <Label fieldName="website" value="Website" class="mt-2" />
+      <Label fieldName="website" value="Country" class="mt-2" />
       <Input
         bind:value={website}
         name="website"
-        placeholder="Enter your website"
+        placeholder="Enter company country"
         disabled={currentStep !== 1}
       />
 
-      <Label fieldName="logo" value="Logo" class="mt-2" />
-      {#if currentStep === 1}
-        <Input
-          bind:value={logo}
-          name="logo"
-          placeholder="Enter an image URL"
-          disabled={currentStep !== 1}
-        />
-      {:else}
-        <img
-          id="logo"
-          name="logo"
-          src={logo}
-          alt="Logo"
-          class="object-cover object-center w-32 h-32 bg-white border rounded-lg cursor-not-allowed border-green-550 opacity-60"
-        />
-      {/if}
+      <Label fieldName="logo" value="Address" class="mt-2" />
+      <Input
+        bind:value={logo}
+        name="address"
+        placeholder="Enter company address"
+        disabled={currentStep !== 1}
+      />
 
       {#if currentStep == 1}
         <PrimaryButton

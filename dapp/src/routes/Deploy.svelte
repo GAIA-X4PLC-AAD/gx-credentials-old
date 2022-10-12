@@ -121,8 +121,9 @@
     <VerificationStep
       step={1}
       bind:currentStep
-      title="Deploy Your Profile"
-      description="Upload your credentials to Kepler, and deploy your Tezos Profile smart contract."
+      title="Complete the Issuance of Your Company Credential"
+      description="Your company credential will be issued by asc(s and stored on their servers. Meanwhile, a log will be put on
+      the Tezos blockchain which indicates that asc(s has issued a verifiable credential for you."
     >
       <div class="w-full body mt-8">
         <div class="flex items-start md:items-center">

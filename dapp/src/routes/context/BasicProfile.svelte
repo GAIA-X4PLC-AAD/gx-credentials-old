@@ -5,8 +5,8 @@
 </style>
 
 <div class="table-font">
-  <h1>Basic Profile</h1>
-  <p>Basic Profile for tzprofiles</p>
+  <h1>Company Profile</h1>
+  <!-- <p>Basic Profile for tzprofiles</p> -->
   <table>
     <tr>
       <th class="border"> Property </th>

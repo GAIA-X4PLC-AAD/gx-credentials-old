@@ -35,22 +35,22 @@
         return !!claim.preparedContent;
       });
 
-      let orbit;
-      orbit = getCurrentOrbit(nextClaimStream);
-      if (!orbit) {
-        orbit = await fetchOrbitId();
-      }
+      // let orbit;
+      // orbit = getCurrentOrbit(nextClaimStream);
+      // if (!orbit) {
+      //   orbit = await fetchOrbitId();
+      // }
 
-      const urls = await addToKepler(
-        orbit,
-        ...newClaims.map((claim) => claim.preparedContent)
-      );
+      // const urls = await addToKepler(
+      //   orbit,
+      //   ...newClaims.map((claim) => claim.preparedContent)
+      // );
 
       for (let i = newClaims.length, x = 0; i > x; i--) {
         let profile = newClaims[i - 1];
         let next = nextClaimStream[profile.type];
 
-        next.irl = urls.pop();
+        // next.irl = urls.pop();
         // Is a string because findNewClaims checked.
         next.content = profile.preparedContent;
         next.preparedContent = false;
@@ -59,7 +59,6 @@
 
         nextClaimStream[profile.type] = next;
       }
-
       // TODO: FIx here
       await addClaims(newClaims);
       claimsStream.set(nextClaimStream);
@@ -85,8 +84,8 @@
 <Card
   class="relative self-center w-full text-center break-all md:max-w-md lg:max-w-md"
 >
-  <div class="mb-4 text-2xl text-left font-bold body">
-    Adding the following claims
+  <div class="mb-4 mt-4 text-xl text-left font-bold body">
+    Issuing the following credentials
   </div>
 
   <div class="mb-8">
@@ -99,7 +98,7 @@
     {/each}
   </div>
 
-  {#if $contractAddress === null}
+  <!-- {#if $contractAddress === null}
     <div class="flex items-center w-full text-gray-650 mt-8">
       <input id="agreement" on:change={toggle} type="checkbox" />
       <label
@@ -122,19 +121,21 @@
         {'.'}
       </label>
     </div>
-  {/if}
+  {/if} -->
 
   {#if canUpload($claimsStream)}
     {#if $contractAddress !== null}
       {#if !isAllOnChain($claimsStream)}
         {#if isAddingClaims}
           <div class="w-full flex flex-col items-center">
-            <LoadingSpinner class="rotating my-6 w-18 h-18 flex items-center justify-center" />
+            <LoadingSpinner
+              class="rotating my-6 w-18 h-18 flex items-center justify-center"
+            />
             Please be patient
           </div>
         {:else}
           <PrimaryButton
-            text="Add Claims to Profile"
+            text="Issue"
             class="mx-auto mt-4 bottom-6 w-full"
             onClick={async () => {
               await uploadNewClaim();
@@ -144,7 +145,7 @@
       {/if}
     {:else}
       <PrimaryButton
-        text="Add Claims to Profile"
+        text="Issue"
         class="mx-auto mt-4 bottom-6"
         disabled={!canUpload($claimsStream)}
         onClick={async () => {

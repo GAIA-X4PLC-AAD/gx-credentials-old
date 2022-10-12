@@ -10,9 +10,9 @@
 
 <div>
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-alias" value="Alias" />
+    <Label class="mt-4" fieldName="basic-alias" value="Name" />
     {#if draft.alias}
-      <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
+      <p class="text-sm text-gray-350 mt-2">({'asc(s-attested'})</p>
     {/if}
   </div>
   {#if draft.alias}
@@ -22,12 +22,11 @@
   {/if}
 
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-description" value="Description" />
+    <Label class="mt-4" fieldName="basic-description" value="GX-ID" />
     {#if draft.description}
-      <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
+      <p class="text-sm text-gray-350 mt-2">({'asc(s-attested'})</p>
     {/if}
   </div>
-
   {#if draft.description}
     <Input
       fluid
@@ -41,12 +40,11 @@
   {/if}
 
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-website" value="Website" />
+    <Label class="mt-4" fieldName="basic-website" value="Country" />
     {#if draft.website}
-      <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
+      <p class="text-sm text-gray-350 mt-2">({'asc(s-attested'})</p>
     {/if}
   </div>
-
   {#if draft.website}
     <Input
       fluid
@@ -58,33 +56,16 @@
   {:else}
     <ClaimLinkInput {display} />
   {/if}
+
   <div class="flex justify-between items-center">
-    <Label class="mt-4" fieldName="basic-logo" value="Logo" />
+    <Label class="mt-4" fieldName="basic-logo" value="Address" />
     {#if draft.logo}
-      <p class="text-sm text-gray-350 mt-2">(self-attested)</p>
+      <p class="text-sm text-gray-350 mt-2">({'asc(s-attested'})</p>
     {/if}
   </div>
-
-  <div class="flex items-center justify-between">
-    <div
-      class="flex flex-col items-center justify-center w-32 h-32 text-center border rounded-lg border-gray-200 text-gray-350"
-      class:opacity-60={true}
-    >
-      {#if draft.logo}
-        <img
-          name="basic-logo"
-          class="object-cover object-center w-full h-full rounded-lg flex items-center justify-center"
-          src={draft.logo}
-          alt="Basic profile logo"
-        />
-      {:else}
-        <p class="m-2 italic break-words select-none">
-          {'Available in '}
-          <a href="/basic-profile" class="underline">
-            Basic profile Information
-          </a>
-        </p>
-      {/if}
-    </div>
-  </div>
+  {#if draft.logo}
+    <Input fluid name="basic-logo" class="mb-3" value={draft.logo} disabled />
+  {:else}
+    <ClaimLinkInput {display} />
+  {/if}
 </div>

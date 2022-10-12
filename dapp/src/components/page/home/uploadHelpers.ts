@@ -1,4 +1,4 @@
-import { ClaimMap, Claim } from 'src/helpers';
+import { ClaimMap, Claim, Log } from 'src/helpers';
 import { removeClaims, claimsStream, alert } from 'src/store';
 
 export const canUpload = (claimStream: any): boolean => {
@@ -48,36 +48,36 @@ export const shouldDisplayPendingStatus = (claim): boolean => {
   return !claim.content && claim.preparedContent;
 };
 
-export const selectDisplayStatus = (claim): string => {
-  if (!claim.content && claim.preparedContent) return 'Awaiting Upload';
-  if (!claim.content && !claim.preparedContent) return 'incomplete';
-  return 'complete';
+export const selectDisplayStatus = (userLog: Log | null) => {
+  if (userLog?.message === 'Credentials have been published to the blockchain') return 'published';
+  if (userLog?.message === 'Credentials have been revoked') return 'revoked';
+  return 'incomplete'
 };
 
 export const statusTextToClassMapping = {
-  'Awaiting Upload': 'pending',
-  complete: 'complete',
+  revoked: 'revoked',
+  published: 'published',
   incomplete: 'incomplete',
 };
 
-const statusDisplayRanking = ['complete', 'pending', 'incomplete'];
+const statusDisplayRanking = ['published', 'revoked', 'incomplete'];
 
-export const sortClaimsByStatus = (a: Claim, b: Claim) => {
-  let aRanking = statusDisplayRanking.indexOf(
-    statusTextToClassMapping[selectDisplayStatus(a)]
-  );
-  let bRanking = statusDisplayRanking.indexOf(
-    statusTextToClassMapping[selectDisplayStatus(b)]
-  );
+// export const sortClaimsByStatus = (a: Claim, b: Claim) => {
+//   let aRanking = statusDisplayRanking.indexOf(
+//     statusTextToClassMapping[selectDisplayStatus(a)]
+//   );
+//   let bRanking = statusDisplayRanking.indexOf(
+//     statusTextToClassMapping[selectDisplayStatus(b)]
+//   );
 
-  if (aRanking < bRanking) {
-    return -1;
-  }
-  if (aRanking > bRanking) {
-    return 1;
-  }
-  return 0;
-};
+//   if (aRanking < bRanking) {
+//     return -1;
+//   }
+//   if (aRanking > bRanking) {
+//     return 1;
+//   }
+//   return 0;
+// };
 
 export const deleteSingleCredential = async (claim) => {
   await removeClaims([claim]);
