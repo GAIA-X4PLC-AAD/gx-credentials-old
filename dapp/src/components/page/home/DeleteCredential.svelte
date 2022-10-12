@@ -12,28 +12,24 @@
   let isDeleting = false;
 
   const deleteSingleCredential = async (claim: Claim) => {
-    try {
-      if (selectDisplayStatus(claim) === 'complete') {
-        await removeClaims([claim]);
-      }
-
-      const nextClaimStream = $claimsStream;
-
-      for (const [key, value] of Object.entries(nextClaimStream)) {
-        if (value.type === claim.type) {
-          nextClaimStream[key] = newClaim(claim.type);
-        }
-      }
-
-      claimsStream.set(nextClaimStream);
-
-      alert.set({
-        message: 'Successfully removed credential',
-        variant: 'success',
-      });
-    } catch (error) {
-      throw new Error(error.description);
-    }
+    // try {
+    //   if (selectDisplayStatus(claim) === 'complete') {
+    //     await removeClaims([claim]);
+    //   }
+    //   const nextClaimStream = $claimsStream;
+    //   for (const [key, value] of Object.entries(nextClaimStream)) {
+    //     if (value.type === claim.type) {
+    //       nextClaimStream[key] = newClaim(claim.type);
+    //     }
+    //   }
+    //   claimsStream.set(nextClaimStream);
+    //   alert.set({
+    //     message: 'Successfully removed credential',
+    //     variant: 'success',
+    //   });
+    // } catch (error) {
+    //   throw new Error(error.description);
+    // }
   };
 </script>
 
@@ -44,7 +40,9 @@
 
   {#if isDeleting}
     <div class="w-full flex flex-col items-center">
-      <LoadingSpinner class="rotating my-6 w-18 h-18 flex items-center justify-center" />
+      <LoadingSpinner
+        class="rotating my-6 w-18 h-18 flex items-center justify-center"
+      />
       Please be patient
     </div>
   {/if}

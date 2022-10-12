@@ -3,7 +3,7 @@
   import { clickOutside } from './clickOutside.js';
   import './MoreModal.scss';
 
-  export let onClickDelete;
+  // export let onClickDelete;
   export let href;
   export let downloadFileName;
 
@@ -35,7 +35,7 @@
   </div>
   {#if isOpen}
     <div class="panel-container">
-      <div
+      <!-- <div
         class="cursor-pointer my-2 sm:my-3"
         on:click={() => {
           closePanel();
@@ -43,7 +43,7 @@
         }}
       >
         Delete
-      </div>
+      </div> -->
 
       <div class="cursor-pointer my-2 sm:my-3" on:click={() => closePanel()}>
         <a

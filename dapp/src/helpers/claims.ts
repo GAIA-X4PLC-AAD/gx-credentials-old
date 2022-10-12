@@ -21,23 +21,23 @@ export const exhaustiveCheck = (arg: never) => {
 
 // The types of claims supported by the UI.
 export type ClaimType = 'basic'
-  | 'twitter'
-  | 'ethereum'
-  | 'discord'
-  | 'dns'
-  | 'github'
-  | 'email';
+  // | 'twitter'
+  // | 'ethereum'
+  // | 'discord'
+  // | 'dns'
+  // | 'github'
+  // | 'email';
 
 // NOTE: Ethereum backwards compatibility
 export type ClaimVCType =
   | 'BasicProfile'
-  | 'TwitterVerification'
-  | 'EthereumControl'
-  | 'EthereumAddressControl'
-  | 'DiscordVerification'
-  | 'DnsVerification'
-  | 'GitHubVerification'
-  | 'EmailVerification';
+  // | 'TwitterVerification'
+  // | 'EthereumControl'
+  // | 'EthereumAddressControl'
+  // | 'DiscordVerification'
+  // | 'DnsVerification'
+  // | 'GitHubVerification'
+  // | 'EmailVerification';
 
 // TODO: Type better? Define what VCs look like generically?
 export const claimTypeFromVC = (vc: any): ClaimType | false => {
@@ -52,19 +52,19 @@ export const claimTypeFromVC = (vc: any): ClaimType | false => {
       case 'BasicProfile':
         return 'basic';
       // NOTE: Ethereum backwards compatibility
-      case 'EthereumControl':
-      case 'EthereumAddressControl':
-        return 'ethereum';
-      case 'TwitterVerification':
-        return 'twitter';
-      case 'DiscordVerification':
-        return 'discord';
-      case 'DnsVerification':
-        return 'dns';
-      case 'GitHubVerification':
-        return 'github';
-      case 'EmailVerification':
-        return 'email';
+      // case 'EthereumControl':
+      // case 'EthereumAddressControl':
+      //   return 'ethereum';
+      // case 'TwitterVerification':
+      //   return 'twitter';
+      // case 'DiscordVerification':
+      //   return 'discord';
+      // case 'DnsVerification':
+      //   return 'dns';
+      // case 'GitHubVerification':
+      //   return 'github';
+      // case 'EmailVerification':
+      //   return 'email';
       default:
     }
   }
@@ -76,12 +76,12 @@ export const claimTypeFromVC = (vc: any): ClaimType | false => {
 // NOTE: This actually determines the order on the screen?
 const claimTypes: Array<ClaimType> = [
   'basic',
-  'twitter',
-  'ethereum',
-  'discord',
-  'dns',
-  'github',
-  'email'
+  // 'twitter',
+  // 'ethereum',
+  // 'discord',
+  // 'dns',
+  // 'github',
+  // 'email'
 ];
 
 export interface BasicDraft {
@@ -120,12 +120,12 @@ export interface EmailDraft {
 
 export type ClaimDraft =
   | BasicDraft
-  | TwitterDraft
-  | EthereumDraft
-  | DiscordDraft
-  | DnsDraft
-  | GitHubDraft
-  | EmailDraft;
+  // | TwitterDraft
+  // | EthereumDraft
+  // | DiscordDraft
+  // | DnsDraft
+  // | GitHubDraft
+  // | EmailDraft;
 
 /*
  * UI Text & Assets
@@ -146,7 +146,7 @@ export interface ClaimUIAssets {
   // Title of the claim in the UI
   title: string;
   // Type of the claim displayed to the user
-  type: string;
+  // type: string;
 }
 
 export const newDisplay = (ct: ClaimType): ClaimUIAssets => {
@@ -154,86 +154,86 @@ export const newDisplay = (ct: ClaimType): ClaimUIAssets => {
     case 'basic':
       return {
         description:
-          'This process is used to generate some basic profile information about yourself by filling in an alias, description, and logo for your profile.',
-        display: 'Basic Profile Information',
+          'This process is used to generate a self-description for your company by filling in a name, GX-ID, country, and address.',
+        display: 'Company Profile',
         icon: PersonOutlined,
         route: '/basic-profile',
-        routeDescription: 'Basic Profile Information',
+        routeDescription: 'Company Profile',
         proof: 'Self-Attestation',
-        title: 'Basic Profile',
-        type: 'Basic Profile',
+        title: 'Company Profile',
+        // type: 'Company Profile',
       };
-    case 'ethereum':
-      return {
-        description:
-          'This process is used to link your Ethereum address to your Tezos account by connecting to MetaMask, signing using your Ethereum address, and finally receiving the verification.',
-        display: 'Ethereum Address Ownership',
-        icon: EthereumIcon,
-        route: '/ethereum',
-        routeDescription: 'Ethereum Address Ownership',
-        proof: 'Address Signature',
-        title: 'Ethereum Address Ownership',
-        type: 'Address Ownership',
-      };
-    case 'twitter':
-      return {
-        description:
-          'This process is used to link your Twitter account to your Tezos account by signing a message using your private key, entering your Twitter handle, and finally, tweeting that message.',
-        display: 'Twitter Account Verification',
-        icon: TwitterIcon,
-        route: '/twitter',
-        routeDescription: 'Twitter Account Information',
-        proof: 'Tweet',
-        title: 'Twitter Verification',
-        type: 'Social Media',
-      };
-    case 'discord':
-      return {
-        description:
-          'This process is used to link your Discord account to your Tezos account by signing a message using your private key, entering your Discord handle, and finally, sending that message in a channel.',
-        display: 'Discord Account Verification',
-        icon: DiscordIcon,
-        route: '/discord',
-        routeDescription: 'Discord Account Information',
-        proof: 'Discord Message',
-        title: 'Discord Verification',
-        type: 'Social Media',
-      };
-    case 'dns':
-      return {
-        description:
-          'This process is used to link your web domain name to your Tezos account by signing a message using your private key, storing the signature in a TXT record, and finally retrieving that data for verification.',
-        display: 'Web Domain Verification',
-        icon: GlobeIcon,
-        route: '/dns',
-        routeDescription: 'Domain Ownership',
-        proof: 'TXT Record',
-        title: 'DNS Verification',
-        type: 'Domain Ownership',
-      };
-    case 'github':
-      return {
-        description: 'This process is used to link your GitHub account to your Tezos account by entering your GitHub handle, signing a message using your private key, and finally posting a public Gist containing that signature.',
-        display: 'GitHub Account Verification',
-        icon: GitHubIcon,
-        route: '/github',
-        routeDescription: 'GitHub Account Verification',
-        proof: 'Gist',
-        title: 'GitHub Verification',
-        type: 'Social Media'
-      }
-    case 'email':
-      return {
-        description:
-          'This process is used to link your email address to your Tezos account.',
-        display: 'Email Verification',
-        icon: PersonOutlined,
-        route: '/email',
-        routeDescription: 'Email Verification',
-        proof: 'Challenge',
-        title: 'Email Verification',
-        type: 'Email Ownership',
-      };
+    // case 'ethereum':
+    //   return {
+    //     description:
+    //       'This process is used to link your Ethereum address to your Tezos account by connecting to MetaMask, signing using your Ethereum address, and finally receiving the verification.',
+    //     display: 'Ethereum Address Ownership',
+    //     icon: EthereumIcon,
+    //     route: '/ethereum',
+    //     routeDescription: 'Ethereum Address Ownership',
+    //     proof: 'Address Signature',
+    //     title: 'Ethereum Address Ownership',
+    //     type: 'Address Ownership',
+    //   };
+    // case 'twitter':
+    //   return {
+    //     description:
+    //       'This process is used to link your Twitter account to your Tezos account by signing a message using your private key, entering your Twitter handle, and finally, tweeting that message.',
+    //     display: 'Twitter Account Verification',
+    //     icon: TwitterIcon,
+    //     route: '/twitter',
+    //     routeDescription: 'Twitter Account Information',
+    //     proof: 'Tweet',
+    //     title: 'Twitter Verification',
+    //     type: 'Social Media',
+    //   };
+    // case 'discord':
+    //   return {
+    //     description:
+    //       'This process is used to link your Discord account to your Tezos account by signing a message using your private key, entering your Discord handle, and finally, sending that message in a channel.',
+    //     display: 'Discord Account Verification',
+    //     icon: DiscordIcon,
+    //     route: '/discord',
+    //     routeDescription: 'Discord Account Information',
+    //     proof: 'Discord Message',
+    //     title: 'Discord Verification',
+    //     type: 'Social Media',
+    //   };
+    // case 'dns':
+    //   return {
+    //     description:
+    //       'This process is used to link your web domain name to your Tezos account by signing a message using your private key, storing the signature in a TXT record, and finally retrieving that data for verification.',
+    //     display: 'Web Domain Verification',
+    //     icon: GlobeIcon,
+    //     route: '/dns',
+    //     routeDescription: 'Domain Ownership',
+    //     proof: 'TXT Record',
+    //     title: 'DNS Verification',
+    //     type: 'Domain Ownership',
+    //   };
+    // case 'github':
+    //   return {
+    //     description: 'This process is used to link your GitHub account to your Tezos account by entering your GitHub handle, signing a message using your private key, and finally posting a public Gist containing that signature.',
+    //     display: 'GitHub Account Verification',
+    //     icon: GitHubIcon,
+    //     route: '/github',
+    //     routeDescription: 'GitHub Account Verification',
+    //     proof: 'Gist',
+    //     title: 'GitHub Verification',
+    //     type: 'Social Media'
+    //   }
+    // case 'email':
+    //   return {
+    //     description:
+    //       'This process is used to link your email address to your Tezos account.',
+    //     display: 'Email Verification',
+    //     icon: PersonOutlined,
+    //     route: '/email',
+    //     routeDescription: 'Email Verification',
+    //     proof: 'Challenge',
+    //     title: 'Email Verification',
+    //     type: 'Email Ownership',
+    //   };
   }
 
   exhaustiveCheck(ct);
@@ -249,33 +249,33 @@ export const newDraft = (ct: ClaimType): ClaimDraft => {
         logo: '',
         website: '',
       };
-    case 'discord':
-      return {
-        handle: ''
-      }
-    case 'dns':
-      return {
-        address: ''
-      }
-    case 'ethereum':
-      return {
-        address: '',
-        sameAs: '',
-      };
-    case 'twitter':
-      return {
-        handle: '',
-        tweetUrl: '',
-      };
-    case 'github':
-      return {
-        handle: '',
-        gistId: ''
-      };
-    case 'email':
-      return {
-        email: '',
-    }
+    // case 'discord':
+    //   return {
+    //     handle: ''
+    //   }
+    // case 'dns':
+    //   return {
+    //     address: ''
+    //   }
+    // case 'ethereum':
+    //   return {
+    //     address: '',
+    //     sameAs: '',
+    //   };
+    // case 'twitter':
+    //   return {
+    //     handle: '',
+    //     tweetUrl: '',
+    //   };
+    // case 'github':
+    //   return {
+    //     handle: '',
+    //     gistId: ''
+    //   };
+    // case 'email':
+    //   return {
+    //     email: '',
+    // }
   }
 
   exhaustiveCheck(ct);
@@ -306,6 +306,12 @@ export interface Claim {
   onChain: boolean;
   // Type of claim
   type: ClaimType;
+}
+
+export interface Log {
+  did: string
+  message: string
+  time: Date
 }
 
 export interface ClaimMap {
@@ -351,61 +357,61 @@ export const contentToDraft = (ct: ClaimType, content: any): ClaimDraft => {
         website,
       };
     }
-    case 'ethereum': {
-      const { credentialSubject } = content;
-      // NOTE: Ethereum backwards compat.
-      const { address, wallet, sameAs } = credentialSubject;
-      return {
-        address: address || wallet,
-        sameAs,
-      };
-    }
-    case 'twitter': {
-      const { evidence, credentialSubject } = content;
-      const { sameAs } = credentialSubject;
-      const { tweetId } = evidence;
-      const handle = sameAs.replace('https://twitter.com/', '');
-      const tweetUrl = `https://twitter.com/${handle}/status/${tweetId}`;
+    // case 'ethereum': {
+    //   const { credentialSubject } = content;
+    //   // NOTE: Ethereum backwards compat.
+    //   const { address, wallet, sameAs } = credentialSubject;
+    //   return {
+    //     address: address || wallet,
+    //     sameAs,
+    //   };
+    // }
+    // case 'twitter': {
+    //   const { evidence, credentialSubject } = content;
+    //   const { sameAs } = credentialSubject;
+    //   const { tweetId } = evidence;
+    //   const handle = sameAs.replace('https://twitter.com/', '');
+    //   const tweetUrl = `https://twitter.com/${handle}/status/${tweetId}`;
 
-      return {
-        handle,
-        tweetUrl,
-      };
-    }
-    case 'discord': {
-      const { evidence } = content;
+    //   return {
+    //     handle,
+    //     tweetUrl,
+    //   };
+    // }
+    // case 'discord': {
+    //   const { evidence } = content;
 
-      return {
-        handle: evidence.handle,
-      };
-    }
-    case 'dns': {
-      const { credentialSubject } = content;
-      let sameAsString: string = credentialSubject.sameAs;
+    //   return {
+    //     handle: evidence.handle,
+    //   };
+    // }
+    // case 'dns': {
+    //   const { credentialSubject } = content;
+    //   let sameAsString: string = credentialSubject.sameAs;
 
-      return {
-        address: sameAsString.substring(4, sameAsString.length),
-      };
+    //   return {
+    //     address: sameAsString.substring(4, sameAsString.length),
+    //   };
 
-    }
-    case 'github': {
-      const { credentialSubject, evidence } = content;
-      const { sameAs } = credentialSubject;
-      const { gistId } = evidence;
+    // }
+    // case 'github': {
+    //   const { credentialSubject, evidence } = content;
+    //   const { sameAs } = credentialSubject;
+    //   const { gistId } = evidence;
 
-      return {
-        handle: sameAs.split("/")[sameAs.split("/").length - 1],
-        gistId,
-      }
-    }
-    case 'email': {
-      const { credentialSubject } = content;
-      const {sameAs} = credentialSubject;
+    //   return {
+    //     handle: sameAs.split("/")[sameAs.split("/").length - 1],
+    //     gistId,
+    //   }
+    // }
+    // case 'email': {
+    //   const { credentialSubject } = content;
+    //   const {sameAs} = credentialSubject;
 
-      return {
-        email: sameAs.split("/")[sameAs.split("/").length - 1],
-      };
-    }
+    //   return {
+    //     email: sameAs.split("/")[sameAs.split("/").length - 1],
+    //   };
+    // }
   }
 
   exhaustiveCheck(ct);
@@ -434,18 +440,18 @@ export const claimToOutlink = (ct: ClaimType, c: Claim): string => {
       draft = draft as BasicDraft;
       return draft.website;
     }
-    case 'ethereum': {
-      draft = draft as EthereumDraft;
-      return `https://etherscan.io/address/${draft.address}`;
-    }
-    case 'twitter': {
-      draft = draft as TwitterDraft;
-      return `https://www.twitter.com/${draft.handle}`;
-    }
-    case 'github': {
-      draft = draft as GitHubDraft;
-      return `https://github.com/${draft.handle}`;
-    }
+    // case 'ethereum': {
+    //   draft = draft as EthereumDraft;
+    //   return `https://etherscan.io/address/${draft.address}`;
+    // }
+    // case 'twitter': {
+    //   draft = draft as TwitterDraft;
+    //   return `https://www.twitter.com/${draft.handle}`;
+    // }
+    // case 'github': {
+    //   draft = draft as GitHubDraft;
+    //   return `https://github.com/${draft.handle}`;
+    // }
     // TODO: Add DNS/Discord/Github
   }
 };
@@ -455,7 +461,7 @@ export const claimFromTriple = (
   ct: ClaimType,
   triple: tzp.ValidContent<string, tzp.ClaimType, string>
 ): Claim => {
-  let content = JSON.parse(triple[1]);
+  let content:any = (triple[1]);
   return {
     content,
     contractType: triple[2],
