@@ -1,0 +1,18 @@
+@layer components {
+  .button-container {
+    @apply bg-blue-2 py-3 px-6 transition delay-100 text-white rounded-25;
+    &:hover {
+        @apply text-white transition delay-100 bg-blue-3;
+    }
+  }
+  .secondary-button-container {
+      @apply text-black bg-beige-2 text-black transition delay-100;
+      &:hover {
+          @apply bg-beige-3;
+      }
+  }
+}
+
+.button-container:hover{
+    transform: scale(1.05);
+}

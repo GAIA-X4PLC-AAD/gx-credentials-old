@@ -1,0 +1,45 @@
+{
+	"extends": "@tsconfig/svelte/tsconfig.json",
+	"include": ["src/**/*", "src/node_modules/**/*"],
+	"exclude": ["node_modules/*", "__sapper__/*", "static/*"],
+	"compilerOptions": {
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"importsNotUsedAsValues": "remove",
+		"isolatedModules": false,
+		"baseUrl": ".",
+		"paths": {
+			"components*": ["src/components/*", "src/components"],
+			"routes*": ["src/routes/*", "src/routes"],
+			"enums*": ["src/enums/*"],
+			"src*": ["src/*"],
+		}
+	},
+}
+
+// {
+// 	"compilerOptions": {
+// 	  "target": "es5",
+// 	  "lib": [
+// 		"dom",
+// 		"dom.iterable",
+// 		"esnext"
+// 	  ],
+// 	  "allowJs": true,
+// 	  "skipLibCheck": true,
+// 	  "esModuleInterop": true,
+// 	  "allowSyntheticDefaultImports": true,
+// 	  "strict": true,
+// 	  "forceConsistentCasingInFileNames": true,
+// 	  "module": "esnext",
+// 	  "moduleResolution": "node",
+// 	  "resolveJsonModule": true,
+// 	  "isolatedModules": true,
+// 	  "noEmit": true,
+// 	  "jsx": "preserve"
+// 	},
+// 	"include": [
+// 	  "src"
+// 	]
+//   }
+  

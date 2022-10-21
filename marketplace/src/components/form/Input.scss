@@ -1,0 +1,11 @@
+@layer components {
+    .input-container {
+        @apply text-black font-normal text-base bg-beige-4;
+    }
+    .input-wrapper {
+        @apply w-inherit;
+    }
+    #enter-twitter-handle {
+        @apply pl-7;
+    }
+}

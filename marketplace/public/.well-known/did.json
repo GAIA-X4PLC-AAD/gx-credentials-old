@@ -1,0 +1,12 @@
+{
+  "@context": "https://w3id.org/did/v1",
+  "id": "did:web:tzprofiles.com",
+  "verificationMethod": [{
+       "id": "did:web:tzprofiles.com#controller",
+       "type": "Ed25519VerificationKey2018",
+       "controller": "did:web:tzprofiles.com",
+       "publicKeyJwk": {"kty":"OKP","crv":"Ed25519","x":"wQYQZIM8yEi66OCt88oscUEqnnwvYszRC4DwF02YYt0"}
+  }],
+  "authentication": ["did:web:tzprofiles.com#controller"],
+  "assertionMethod": ["did:web:tzprofiles.com#controller"]
+}

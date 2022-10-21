@@ -1,0 +1,9 @@
+.panel-container {
+  box-shadow: 0px 0px 60px rgba(82, 82, 82, 0.1);
+}
+
+@layer components {
+  .panel-container {
+    @apply absolute top-5 -left-29 sm:-left-25 w-30.5 sm:w-37.5 bg-beige-5 border border-beige-6 rounded-xl py-2 px-3 z-100;
+  }
+}

@@ -1,0 +1,5 @@
+@layer components {
+    .landing-container {
+        @apply max-w-25 w-full flex flex-col;
+    }
+}

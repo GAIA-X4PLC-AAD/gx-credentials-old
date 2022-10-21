@@ -1,0 +1,22 @@
+.address-container:hover{
+    transform: scale(1.05);
+}
+
+.admin-dropdown-pane, .address-container {
+  box-shadow: 0px 0px 60px rgba(252, 243, 243, 0.1);
+}
+
+@layer components {
+  .admin-dropdown-pane {
+    @apply absolute top-15 left-0 w-37.5 bg-beige-5 border border-beige-6 rounded-xl py-3.5 px-3 text-center;
+  }
+  .overall-wallet-container {
+    @apply hidden sm:block;
+  }
+  .address-container {
+    @apply rounded-25 bg-white text-black transition delay-100;
+    .address-text-container {
+      @apply overflow-hidden whitespace-nowrap overflow-ellipsis w-full max-w-37.5;
+    }
+  }
+}

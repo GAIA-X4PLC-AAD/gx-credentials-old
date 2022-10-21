@@ -1,0 +1,20 @@
+@layer components {
+  .bubble-outline {
+    @apply py-1.5 px-3 border border-beige-10 rounded-25 h-10 mr-2.5;
+    .address-container {
+      @apply overflow-hidden max-w-37.5 w-full overflow-ellipsis whitespace-nowrap;
+    }
+  }
+  .public-profile-container {
+    @apply max-w-112.5 w-full;
+  }
+  .social-icon-container {
+    @apply p-1.5 border border-beige-10 h-10 w-10 rounded-25 flex items-center justify-center;
+  }
+  .description-section {
+    @apply max-h-25 overflow-auto;
+  }
+  .img-self {
+    @apply object-cover w-20 h-20 rounded-full;
+  }
+}
