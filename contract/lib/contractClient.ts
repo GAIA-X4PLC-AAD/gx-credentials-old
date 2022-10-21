@@ -41,6 +41,7 @@ const taquito = require('@taquito/taquito')
 const tzip16 = require('@taquito/tzip16')
 const contract_1 = require('./contract')
 const axios_1 = require('axios')
+require('dotenv').config()
 // Magic Number controlling how long to wait before confirming success.
 // Seems to be an art more than a science, 3 was suggested by a help thread.
 const CONFIRMATION_CHECKS = 3
@@ -87,7 +88,7 @@ class ContractClient {
         case 'wallet':
           this.tezos.setProvider({
             signer: yield signer_1.InMemorySigner.fromSecretKey(
-              'edskS5jSSAvxiBLp8bDruZD8xKPtEUUzaxfF7RcTFg57a5Xn91CEVdbkn64bZzRi6r1nYxrECsuXtipgN26VkfzmvGt9SZazRG',
+              process.env.PRIVATE_KEY,
             ),
           })
           this.signerSet = true
@@ -194,7 +195,7 @@ class ContractClient {
   retrieveAndScreenContract() {
     return __awaiter(this, void 0, void 0, function* () {
       let contract = yield this.tezos.contract.at(
-        'KT1PjbYmrc3vaMwQKu8Y8KTiLPbhZckYiotd',
+        process.env.CONTRACT_ADDRESS,
         tzip16.tzip16,
       )
       let contents = yield contract.storage()
@@ -370,7 +371,7 @@ class ContractClient {
       //     let triple = yield this.referenceToTriple(t, r);
       //     contentList.push(triple);
       // }
-      const issuerContract = 'KT1PjbYmrc3vaMwQKu8Y8KTiLPbhZckYiotd'
+      const issuerContract = process.env.CONTRACT_ADDRESS
       let contract = yield this.getContract(issuerContract)
       let pkh = yield this.getPKH()
       let entrypoints = Object.keys(contract.methods)
