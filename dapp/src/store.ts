@@ -11,7 +11,8 @@ import * as helpers from './helpers/index';
 
 import { Kepler, authenticator, Action, getOrbitId } from 'kepler-sdk';
 import { verifyCredential } from 'didkit-wasm';
-import { addDefaults, claimFromTriple, claimTypeFromVC } from './helpers/index';
+import { addDefaults, claimFromTriple, claimTypeFromVC, Log } from './helpers/index';
+import { SERVER_URL } from '../src/constants/server'
 
 /*
  * Global Variables
@@ -136,7 +137,6 @@ export const saveToKepler = async (
 
 export let claimsStream: Writable<helpers.ClaimMap> =
   writable<helpers.ClaimMap>(addDefaults({}));
-
 export const contractClient: Writable<contractLib.TZProfilesClient> =
   writable<contractLib.TZProfilesClient>(null);
 
@@ -163,6 +163,8 @@ contractClient.subscribe((x) => {
 networkStr.subscribe((x) => {
   localNetworkStr = x;
 });
+
+export let userLog: Writable<Log> = writable<Log>(null);
 
 const hashFunc = async (claimString: string): Promise<string> => {
   let encodedString = new TextEncoder().encode(claimString);
@@ -197,14 +199,13 @@ export const originate = async (): Promise<void> => {
     });
     throw new Error('No claim urls found');
   }
-
   let contractAddr = await localClient.originate(claimsList);
   contractAddress.set(contractAddr);
 };
 
 export const addClaims = async (
   claimsList: Array<helpers.Claim>
-): Promise<string> => {
+) => {
   if (!localClient) {
     alert.set({
       message: 'No wallet detected',
@@ -220,14 +221,18 @@ export const addClaims = async (
     });
     throw new Error('No contractAddress detected');
   }
+  try{
+  const did = await localWallet.getPKH();
+  // TODO: VC should be signed by ascs (update proof)
+  await uploadCredentials(claimsList[0],did);
+  
+  await localClient.addClaims();
 
-  let claimsArgsList: Array<
-    [contractLib.ClaimType, contractLib.ClaimReference]
-  > = claimsList.map((claim) => {
-    return ['VerifiableCredential', claim.irl || ''];
-  });
-
-  return await localClient.addClaims(localContractAddress, claimsArgsList);
+  let result:any = await localClient.retrieve(await localWallet.getPKH());
+  userLog.set(result)
+  }catch{
+    throw new Error("VC upload failed")
+  }
 };
 
 export const removeClaims = async (
@@ -310,7 +315,7 @@ wallet.subscribe((w) => {
                 // }
                 let vc = JSON.parse(c);
                 let type_ = claimTypeFromVC(vc);
-                if(type_ !== 'email'){ // TODO: Fix Email VC Verification
+                // if(type_ !== 'email'){ // TODO: Fix Email VC Verification
                   let verifyResult = await verifyCredential(c, '{}');
                   let verifyJSON = JSON.parse(verifyResult);
                   if (verifyJSON.errors.length > 0) {
@@ -318,22 +323,22 @@ wallet.subscribe((w) => {
                       `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
                     );
                   }
-                }
+                // }
                 switch (type_) {
                   case 'basic':
-                  case 'twitter':
-                  case 'discord':
-                  case 'dns':
-                  case 'github':
-                    if (vc.credentialSubject.id != `did:pkh:tz:${pkh}`) {
-                      throw new Error(`Credential subject not the profile's owner.`)
-                    }
-                    break;
-                  case 'ethereum':
-                    if (vc.credentialSubject.sameAs != pkh) {
-                      throw new Error(`Credential subject not the profile's owner.`)
-                    }
-                    break;
+                  // case 'twitter':
+                  // case 'discord':
+                  // case 'dns':
+                  // case 'github':
+                  //   if (vc.credentialSubject.id != `did:pkh:tz:${pkh}`) {
+                  //     throw new Error(`Credential subject not the profile's owner.`)
+                  //   }
+                  //   break;
+                  // case 'ethereum':
+                  //   if (vc.credentialSubject.sameAs != pkh) {
+                  //     throw new Error(`Credential subject not the profile's owner.`)
+                  //   }
+                  //   break;
                   default:
                 }
                 break;
@@ -349,43 +354,22 @@ wallet.subscribe((w) => {
 
         loadingContracts.set(true);
         try {
-          let result = await nextClient.retrieve(await w.getPKH());
-          if (result) {
-            contractAddress.set(result.address);
-            let nextClaims = Object.assign({}, localClaimsStream);
-
-            for (let i = 0, x = result.valid.length; i < x; i++) {
-              let [url, content, contentType] = result.valid[i];
-              // TODO: Handle other types?
-              if (contentType === 'VerifiableCredential') {
-                let parsed = JSON.parse(content);
-                let claimType = claimTypeFromVC(parsed);
-                if (!claimType) {
-                  throw new Error(
-                    `Unknown claim type: ${parsed?.type?.length &&
-                    parsed.type[parsed.type.length - 1]
-                    }`
-                  );
-                }
-
-                nextClaims[claimType] = helpers.claimFromTriple(claimType, [
-                  url,
-                  content,
-                  contentType,
-                ]);
-              }
-
-              nextClaims = addDefaults(nextClaims);
-
-              claimsStream.set(nextClaims);
-            }
-          } else {
-            alert.set({
-              message: 'No contract detected, starting new one',
-              variant: 'info',
-            });
-            console.warn('No contract detected, starting new one');
+          // Fetch logs
+          let result:any = await nextClient.retrieve(await w.getPKH());
+          userLog.set(result);
+          let nextClaims = Object.assign({}, localClaimsStream);
+          if (result?.message === "Credentials have been published to the blockchain"){
+            const vc = await fetchCredentials(pkh);
+            nextClaims['basic'] = helpers.claimFromTriple('basic', [
+              "url",
+              (vc),
+              'VerifiableCredential',
+            ]);
+            claimsStream.set(nextClaims)
           }
+
+          contractAddress.set('KT1PjbYmrc3vaMwQKu8Y8KTiLPbhZckYiotd');
+
         } catch (e) {
           alert.set({
             message: e.message || JSON.stringify(e),
@@ -418,7 +402,7 @@ network.subscribe((network) => {
     networkStrTemp = network;
     strNetwork = network;
 
-    urlNode = `https://${network}.api.tez.ie/`;
+    urlNode = `https://${network}.smartpy.io`;
     nodeUrl.set(urlNode);
 
     tzktBaseTemp = `https://api.${networkStrTemp}.tzkt.io`;
@@ -582,14 +566,14 @@ export const search = async (wallet: string, opts: searchRetryOpts) => {
               //   );
               let vc = JSON.parse(c);
               let type_ = claimTypeFromVC(vc);
-              if(type_ !== 'email'){ // TODO: Fix Email VC Verification
+              // if(type_ !== 'email'){ // TODO: Fix Email VC Verification
                 let verifyResult = await verifyCredential(c, '{}');
                 let verifyJSON = JSON.parse(verifyResult);
                 if (verifyJSON.errors.length > 0)
                   throw new Error(
                     `Verifying ${c}: ${verifyJSON.errors.join(', ')}`
                   );
-              }
+              // }
               break;
             }
             default:
@@ -648,4 +632,66 @@ export const search = async (wallet: string, opts: searchRetryOpts) => {
     variant: 'error',
   });
   throw new Error(`No contract found for ${wallet}`);
+};
+
+const uploadCredentials = async (vc:any, did:any): Promise<any> => {
+  try {
+    let ref = `${SERVER_URL}/storeVC`;
+    let res = await fetch(ref, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      headers: {
+        'Content-Type': 'application/json',
+        // 'Content-Type': 'application/x-www-form-urlencoded',
+      },
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+      body: JSON.stringify({vc:vc.content, did}), // body data type must match "Content-Type" header
+    });
+    if (res.ok) {
+      alert.set({
+        message: 'VC uploaded successfully!',
+        variant: 'success',
+      });
+      return res.text();
+    }
+  } catch (e) {
+    throw new Error(await e.text());
+  }
+};
+
+const fetchCredentials = async (did:any): Promise<any> => {
+  try {
+    let ref = `${SERVER_URL}/fetchVC?did=${did}`;
+    const res = await fetch(ref, {
+      method: 'GET', // *GET, POST, PUT, DELETE, etc.
+      mode: 'cors', // no-cors, *cors, same-origin
+      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+      credentials: 'same-origin', // include, *same-origin, omit
+      redirect: 'follow', // manual, *follow, error
+      referrerPolicy: 'no-referrer', // no-referrer, *no-referrer-when-downgrade, origin, origin-when-cross-origin, same-origin, strict-origin, strict-origin-when-cross-origin, unsafe-url
+    })
+    .then((response) => {
+      if (response.ok) {
+        return response.clone().json();
+      } else {
+        throw new Error("Request Unsuccessful");
+      }
+    })
+    .then((data) => {
+      alert.set({
+        message: 'VC fetched successfully!',
+        variant: 'success',
+      });
+      return data;
+    })
+    .catch((er) => {
+      console.log(er);
+    }); 
+    return res;  
+  } catch (e) {
+    throw new Error(await e.text());
+  }
 };
