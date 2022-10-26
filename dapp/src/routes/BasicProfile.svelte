@@ -85,7 +85,26 @@
           text="Submit"
           class="mt-8 lg:w-60"
           onClick={() => {
-            next();
+            lock = true;
+            let profile = {
+              alias,
+              description,
+              website,
+              logo,
+            };
+            signBasicProfile($userData, $wallet, profile)
+              .then((vc) => {
+                let nextClaimMap = verification;
+                nextClaimMap.basic.preparedContent = JSON.parse(vc);
+                nextClaimMap.basic.draft = contentToDraft(
+                  'basic',
+                  nextClaimMap.basic.preparedContent
+                );
+                claimsStream.set(nextClaimMap);
+                navigate('/connect');
+              })
+              .catch(console.error)
+              .finally(() => (lock = false));
           }}
           disabled={alias.length < 1 ||
             description.length < 1 ||
@@ -93,7 +112,7 @@
         />
       {/if}
 
-      {#if currentStep == 2}
+      <!-- {#if currentStep == 2}
         <ExplainerToolModal
           bind:toggle
           signature={async () => {
@@ -159,7 +178,7 @@
             </p>
           </Tooltip>
         </div>
-      {/if}
+      {/if} -->
     </VerificationStep>
   </div>
 </BasePage>

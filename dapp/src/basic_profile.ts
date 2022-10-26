@@ -7,6 +7,8 @@ import {
   prepareIssueCredential,
   verifyCredential,
 } from 'didkit-wasm';
+import { InMemorySigner } from '@taquito/signer';
+
 
 export const generateSignature = async (profile, userData) => {
   const { alias, description, website, logo } = profile;
@@ -23,7 +25,7 @@ export const generateSignature = async (profile, userData) => {
       },
     ],
     id: 'urn:uuid:' + uuid(),
-    issuer: did,
+    issuer: 'did:pkh:tz:tz1QRuc9BkvsBfeSGr6kJ5GCzBsrDjMedvA7',
     issuanceDate: new Date().toISOString(),
     type: ['VerifiableCredential', 'BasicProfile'],
     credentialSubject: {
@@ -37,12 +39,14 @@ export const generateSignature = async (profile, userData) => {
 
   let credentialString = JSON.stringify(credential);
   const proofOptions = {
-    verificationMethod: did + '#TezosMethod2021',
+    verificationMethod:     
+    //did + '#TezosMethod2021',
+    'did:pkh:tz:tz1QRuc9BkvsBfeSGr6kJ5GCzBsrDjMedvA7#TezosMethod2021',
     proofPurpose: 'assertionMethod',
   };
-
   const publicKey = userData.account.publicKey;
-  const publicKeyJwkString = await JWKFromTezos(publicKey);
+  // const publicKeyJwkString = await JWKFromTezos(publicKey);
+  const publicKeyJwkString = await JWKFromTezos('edpkuL1QwpLYvnxdcSdNX8sgeainqRcuk93btMiD2xjQhBQmmd2xiS');
   let prepStr = await prepareIssueCredential(
     credentialString,
     JSON.stringify(proofOptions),
@@ -69,12 +73,14 @@ export const signBasicProfile = async (userData, wallet, profile) => {
       payload: micheline,
       sourceAddress: userData.account.address,
     };
-    const { signature } = await wallet.client.requestSignPayload(payload);
+    const signer = new InMemorySigner('edskS5jSSAvxiBLp8bDruZD8xKPtEUUzaxfF7RcTFg57a5Xn91CEVdbkn64bZzRi6r1nYxrECsuXtipgN26VkfzmvGt9SZazRG');
+    const bytes = micheline;
+    const {prefixSig} = await signer.sign(bytes);
 
     let vcStr = await completeIssueCredential(
       credentialString,
       prepStr,
-      signature
+      prefixSig
     );
 
     const verifyOptionsString = '{}';
@@ -93,7 +99,7 @@ export const signBasicProfile = async (userData, wallet, profile) => {
     }
 
     alert.set({
-      message: "You've completed your Basic Profile successfully!",
+      message: "You've completed your Company Profile successfully!",
       variant: 'success',
     });
 
