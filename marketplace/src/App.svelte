@@ -1,72 +1,5 @@
-<style global lang="postcss">
-  @tailwind base;
-  @tailwind components;
-  @tailwind utilities;
-
-  .tooltip {
-    @apply invisible absolute;
-  }
-
-  .has-tooltip:hover .tooltip {
-    @apply visible z-50;
-  }
-  html,
-  body {
-    @apply relative bg-blue-light w-screen min-h-screen m-0 p-0 text-base flex font-inter flex-col overflow-x-hidden;
-  }
-
-  h1,
-  h2,
-  h3,
-  h4,
-  h5 {
-    @apply font-inter font-semibold text-dark-1;
-  }
-
-  body {
-    @apply text-dark-1;
-  }
-
-  a {
-    @apply no-underline text-blue-1;
-  }
-  td,
-  th {
-    @apply font-inter font-normal;
-  }
-
-  pre {
-    white-space: pre-wrap; /* Since CSS 2.1 */
-    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-    white-space: -pre-wrap; /* Opera 4-6 */
-    white-space: -o-pre-wrap; /* Opera 7 */
-    word-wrap: break-word; /* Internet Explorer 5.5+ */
-  }
-
-  /**
-  Custom scrollbar settings
-  */
-  ::-webkit-scrollbar-track {
-    @apply rounded-lg bg-beige-1;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    border-radius: 8px;
-    background-color: #888;
-  }
-  ::-webkit-scrollbar {
-    @apply bg-beige-1 rounded-lg h-1.5 w-1.5;
-  }
-  .body1 {
-    @apply text-xl;
-  }
-  .body2 {
-    @apply text-base;
-  }
-</style>
-
 <script lang="ts">
-import { Router, Route } from 'svelte-navigator';
+  import { Router, Route } from 'svelte-navigator';
   import {
     Address,
     Connect,
@@ -96,6 +29,8 @@ import { Router, Route } from 'svelte-navigator';
     TwitterVerificationPublicTweet,
     DiscordVerification,
     DnsVerification,
+    AdminMarketPlace,
+    UploadCredentials,
   } from './routes';
 
   //This avoids PurgeCSS from deleting classes from production build
@@ -200,6 +135,12 @@ import { Router, Route } from 'svelte-navigator';
   <Route path="ethereumWallet">
     <Address />
   </Route>
+  <Route path="adminMarketPlace">
+    <AdminMarketPlace />
+  </Route>
+  <Route path="uploadCredentials">
+    <UploadCredentials />
+  </Route>
   <!-- NOTE: Eth claim backwards compat -->
   <Route path="EthereumControl">
     <EthereumControl />
@@ -208,3 +149,70 @@ import { Router, Route } from 'svelte-navigator';
     <Wallet />
   </Route>
 </Router>
+
+<style global lang="postcss">
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  .tooltip {
+    @apply invisible absolute;
+  }
+
+  .has-tooltip:hover .tooltip {
+    @apply visible z-50;
+  }
+  html,
+  body {
+    @apply relative bg-blue-light w-screen min-h-screen m-0 p-0 text-base flex font-inter flex-col overflow-x-hidden;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5 {
+    @apply font-inter font-semibold text-dark-1;
+  }
+
+  body {
+    @apply text-dark-1;
+  }
+
+  a {
+    @apply no-underline text-blue-1;
+  }
+  td,
+  th {
+    @apply font-inter font-normal;
+  }
+
+  pre {
+    white-space: pre-wrap; /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
+  }
+
+  /**
+  Custom scrollbar settings
+  */
+  ::-webkit-scrollbar-track {
+    @apply rounded-lg bg-beige-1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    border-radius: 8px;
+    background-color: #888;
+  }
+  ::-webkit-scrollbar {
+    @apply bg-beige-1 rounded-lg h-1.5 w-1.5;
+  }
+  .body1 {
+    @apply text-xl;
+  }
+  .body2 {
+    @apply text-base;
+  }
+</style>

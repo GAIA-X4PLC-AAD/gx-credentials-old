@@ -2,9 +2,15 @@
   import { onMount, onDestroy } from 'svelte';
   import { claimsStream, networkStr, userLog } from 'src/store';
   import './availablecredentials.scss';
-  import { canUpload } from './uploadHelpers';
   import 'src/common/style/animation.scss';
   import * as helpers from '../../../helpers/index';
+  import { collection, getDocs } from 'firebase/firestore/lite';
+  import { db } from 'src/Firebase';
+  import { element } from 'svelte/internal';
+  import { useNavigate } from 'svelte-navigator';
+  import { LoadingSpinner } from 'components/icons';
+
+  let navigate = useNavigate();
 
   let currentNetwork: string;
   networkStr.subscribe((x) => {
@@ -17,28 +23,31 @@
     log = x;
   });
 
-  onMount(() => {
-    if (canUpload($claimsStream)) {
-      window.addEventListener('beforeunload', (e) => {
-        e.preventDefault();
-        return (e.returnValue = '');
-      });
-    }
-  });
-
-  onDestroy(() => {
-    window.removeEventListener('beforeunload', () => {});
+  let loading = false;
+  let listDIDs = null;
+  onMount(async () => {
+    loading = true;
+    const adminCol = collection(db, 'Admins');
+    const DIDSnapshot = await getDocs(adminCol);
+    listDIDs = DIDSnapshot.docs.map((doc) => doc.data());
+    loading = false;
   });
 </script>
 
 <div class="table-container fade-in mb-4 p-4">
   <div class="header-row-container">
-    <div class="body flex flex-row items-center w-full justify-between">
-      {#if log?.message === 'Credentials have been published to the blockchain'}
-        <div class="text-xl sm:text-2xl font-bold body">Welcome to ENVITED</div>
-      {:else}
-        <div class="text-xl sm:text-2xl font-bold body">No Access!</div>
-      {/if}
-    </div>
+    {#if loading}
+      <LoadingSpinner />
+    {:else}
+      <div class="body flex flex-row items-center w-full justify-between">
+        {#if listDIDs}
+          {#if listDIDs.filter((element) => element.DID === log?.did && element.Active).length === 0}
+            {navigate('/uploadCredentials')};
+          {:else}
+            {navigate('/adminMarketPlace')};
+          {/if}
+        {/if}
+      </div>
+    {/if}
   </div>
 </div>
