@@ -22,8 +22,6 @@
     loading = false;
   });
   $: console.log('AA: ', requestData);
-  const labelClass =
-    'px-4 py-2 rounded-full font-semibold text-sm  bg-green-200 ';
 
   const updateStatus = async (event, info) => {
     const docRef = doc(db, 'Requests', info.DID.split(/[: ]+/).pop());
@@ -44,61 +42,68 @@
   $: console.log('requestData: ', requestData);
 </script>
 
-<BasePage class="main flex place-items-center h-screen">
-  <!-- <div class="flex place-items-center h-screen sm:flex-col"> -->
-  {#each requestData || [] as info, i (info)}
-    <div
-      animate:flip={{ duration: 300 }}
-      out:scale={{ duration: 250 }}
-      in:scale={{ duration: 250 }}
-      class="card bg-white m-3 flex flex-col justify-center p-4 shadow-lg rounded-2xl w-2/5 break-all h-65 hover:bg-slate-100"
-    >
-      <div class="flex flex-col">
-        <div class="grid grid-cols-3">
-          <div class="content-center my-3">
-            <label for="did" class={labelClass}>DID</label>
-          </div>
-          <div id="did" class="p-1 justify-start content-center col-span-2">
-            {info.DID}
-          </div>
-        </div>
-        <div class="grid grid-cols-3">
-          <div for="description" class="content-center my-3">
-            <label for="description" class={labelClass}>Description</label>
-          </div>
-          <div
-            id="description"
-            class="p-1 justify-start content-center col-span-2"
-          >
-            {info.description}
-          </div>
-        </div>
-        <div class="grid grid-cols-3">
-          <div for="description" class="content-center my-3">
-            <label for="alias" class={labelClass}>Alias</label>
-          </div>
-          <div id="alias" class="p-1 justify-start content-center col-span-2">
-            {info.alias}
-          </div>
-        </div>
-        <div class="flex flex-3 p-1 justify-start content-center">
-          <div class="flex justify-center mt-4">
-            <button
-              id="accept"
-              type="button"
-              class="text-white bg-green-700 hover:bg-green-800 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
-              on:click={(event) => updateStatus(event, info)}>Approve</button
-            >
-            <button
-              id="reject"
-              type="button"
-              class="text-white bg-red-700 hover:bg-red-800 focus:outline-none font-medium rounded-full text-sm px-5 py-2.5 text-center mr-2 mb-2 dark:bg-red-600 dark:hover:bg-red-700 dark:focus:ring-red-900"
-              on:click={(event) => updateStatus(event, info)}>Reject</button
-            >
-          </div>
-        </div>
+<BasePage class="main flex items-center h-screen">
+  <div class="flex flex-col">
+    <div class="flex justify-center w-screen">
+      <div class="text-5xl font-bold text-center mb-12">
+        Requests for VC approval
       </div>
     </div>
-  {/each}
-  <!-- </div> -->
-</BasePage>
+    <!-- </div> -->
+
+    <div class="w-full flex justify-center">
+      <div class="w-3/4 overflow-x-auto rounded-lg">
+        <table
+          class="w-full text-sm text-left text-gray-500 dark:text-gray-400 shadow-lg"
+        >
+          <thead
+            class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400"
+          >
+            <tr>
+              <th scope="col" class="py-3 px-6 overflow-x-auto min-w-1/4">
+                DID
+              </th>
+              <th scope="col" class="py-3 px-6"> Description </th>
+              <th scope="col" class="py-3 px-6"> Alias </th>
+              <th scope="col" class="py-3 px-6"> Action </th>
+            </tr>
+          </thead>
+          <tbody>
+            {#each requestData || [] as info, i (info)}
+              <tr
+                class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600"
+              >
+                <th
+                  scope="row"
+                  class="py-4 px-4 font-medium text-gray-900 ark:text-white break-all"
+                >
+                  {info.DID}
+                </th>
+                <td class="py-4 px-6 break-all"> {info.description} </td>
+                <td class="py-4 px-6"> {info.alias} </td>
+                <td class="flex items-center py-4 px-6 space-x-3">
+                  <div
+                    id="accept"
+                    type="button"
+                    class="text-green-600 font-bold cursor-pointer"
+                    on:click={(event) => updateStatus(event, info)}
+                  >
+                    Approve
+                  </div>
+                  <div
+                    id="reject"
+                    type="button"
+                    class="text-red-600 font-bold cursor-pointer"
+                    on:click={(event) => updateStatus(event, info)}
+                  >
+                    Reject
+                  </div>
+                </td>
+              </tr>
+            {/each}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div></BasePage
+>

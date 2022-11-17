@@ -40,12 +40,16 @@
       <LoadingSpinner />
     {:else}
       <div class="body flex flex-row items-center w-full justify-between">
-        {#if listDIDs}
-          {#if listDIDs.filter((element) => element.DID === log?.did && element.Active).length === 0}
-            {navigate('/uploadCredentials')};
-          {:else}
-            {navigate('/adminMarketPlace')};
+        {#if log?.message !== 'Credentials have been published to the blockchain'}
+          {#if listDIDs}
+            {#if listDIDs.filter((element) => element.DID === log?.did && element.Active).length === 0}
+              {navigate('/uploadCredentials')};
+            {:else}
+              {navigate('/adminMarketPlace')};
+            {/if}
           {/if}
+        {:else}
+          <div class="text-xl sm:text-2xl font-bold body">No Access!</div>
         {/if}
       </div>
     {/if}
